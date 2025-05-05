@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creating Program Description & Scope</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <style>
+    /* Adjust list indentation in Quill editor */
+    .ql-editor .ql-indent-1 {
+      margin-left: 1.25rem !important;
+    }
+    .ql-editor .ql-indent-2 {
+      margin-left: 1.5rem !important;
+    }
+    .ql-editor .ql-indent-3 {
+      margin-left: 1.75rem !important;
+    }
+    .ql-editor .ql-indent-4 {
+      margin-left: 2rem !important;
+    }
+    /* Reset any other indent levels to a reasonable value */
+    .ql-editor [class^="ql-indent-"] {
+      margin-left: 1.25rem !important;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col overflow-hidden">
+    <!-- Scroll anchor at the very top of the page -->
+    <div id="top-anchor" style="position: absolute; top: 0; left: 0; width: 1px; height: 1px;"></div>
+    <!-- Sticky Header -->
+    <div class="bg-white shadow z-10 sticky top-0 p-6">
+        <h1 class="text-2xl font-bold mb-2 text-center">Creating Program Description & Scope</h1>
+        <p class="text-lg text-center text-gray-600 mb-4">Learn how to create an effective program description and scope that attracts the right researchers</p>
+        
+        <div class="bg-blue-50 p-4 rounded-md mb-4">
+            <div class="flex items-start">
+                <span class="text-blue-500 mr-2 flex-shrink-0 align-top">ℹ️</span>
+                <div>
+                    <p class="text-blue-600 text-sm">Disclaimer: This guide provides general recommendations for creating program descriptions and scopes based on industry observations. The content, including bounty ranges, vulnerability classifications, and legal terms, should be treated as reference points rather than definitive standards. Each organization should evaluate their specific security needs, industry regulations, legal requirements, and risk profiles when creating their program documentation. Bugbop does not guarantee any specific results or outcomes based on following these guidelines. We recommend consulting with security and legal professionals before finalizing your program terms.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex flex-wrap justify-center gap-4 mt-4">
+            <button id="setAllTextToExamples" class="bg-gray-100 hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded">
+              Set All Text to Examples
+            </button>
+            <button id="clearAll" class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold py-2 px-4 rounded">
+              Clear All
+            </button>
+        </div>                  
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto p-6">
+        <form id="programForm" class="space-y-6 px-6 w-full">
+            <!-- Company Name field is hidden but kept in the form for data structure -->
+            <div style="display: none;">
+                <input type="text" id="companyName" name="companyName" value="[Company Name]">
+            </div>
+            <div>
+                <label for="programName" class="block text-sm font-medium text-gray-700">Program Name</label>
+                <input type="text" id="programName" name="programName" required 
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            </div>
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Program Description</label>
+                <p class="mt-1 text-sm text-gray-600">An effective program description is essential for setting clear expectations with security researchers. A well-crafted description communicates your organization's commitment to security and helps researchers understand what you're looking for.</p>
+                <br>
+                <p class="mt-1 text-sm font-medium text-gray-600">Elements of a Great Program Description</p>
+                <p class="mt-1 text-sm text-gray-600">Your program description should include:</p>
+                <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                    <li><span class="font-medium">Welcoming introduction:</span> Make researchers feel invited and valued</li>
+                    <li><span class="font-medium">Brief company overview:</span> Help researchers understand what your organization does</li>
+                    <li><span class="font-medium">Security commitment:</span> Express your dedication to security and vulnerability remediation</li>
+                    <li><span class="font-medium">Researcher value:</span> Explain how researcher contributions help your organization</li>
+                    <li><span class="font-medium">Clear expectations:</span> Set the tone for professional interactions</li>
+                </ul>
+                <p class="mt-4 text-sm text-gray-600 font-medium">Example Introduction:</p>
+                <div class="program-description-example bg-gray-50 border border-gray-200 p-4 rounded text-sm text-gray-600 space-y-2">
+                    <p>We're excited to invite security researchers from all backgrounds to help us make [Company Name] a more secure platform for everyone. Our commitment to security is a core value, and we believe that working with the security community is essential to maintaining the trust of our users.</p>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-sm font-medium text-gray-700">Program Description Text</label>
+                    </div>
+                    <!-- GENERIC toolbar and text area template, but with unique ID -->
+                    <div data-quill="true" data-id="description" data-copy=".program-description-example"></div>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Defining Scope</label>
+                <p class="mt-1 text-sm text-gray-600">A well-defined scope helps researchers focus on the right assets and prevents misunderstandings about what's acceptable to test.</p>
+            </div>
+            <div>
+                <label for="inScope" class="block text-sm font-medium text-gray-700">In-Scope Assets</label>
+                <p class="mt-1 text-sm text-gray-600">Clearly define the systems and applications researchers are permitted to test:</p>
+                <p class="mt-4 text-sm text-gray-600 font-medium">What to Include:</p>
+                <ul class="mt-1 list-disc list-inside text-sm text-gray-600">
+                    <li>Be specific about domains and subdomains</li>
+                    <li>Include IP ranges if applicable</li>
+                    <li>Specify mobile applications if they're included</li>
+                    <li>List API endpoints if they're part of your scope</li>
+                    <li>Include version information for testable software</li>
+                </ul>
+                <p class="mt-4 text-sm text-gray-600 font-medium">Examples:</p>
+                <div class="in-scope-assets-example bg-gray-50 border border-gray-200 p-4 rounded text-sm text-gray-600">
+                    <p><strong>Main Web Application:</strong> https://bugbop.com</p>
+                    <p><strong>Publicly Accessible Subdomains:</strong> *.bugbop.com</p>
+                    <p><strong>Mobile Applications:</strong> iOS and Android apps (latest release versions)</p>
+                    <p><strong>Public API:</strong> api.bugbop.com</p>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between items-center">
+                      <label class="block text-sm font-medium text-gray-700">In-Scope Assets Text</label>
+                    </div>
+                    <!-- GENERIC toolbar and text area template, but with unique ID -->
+                    <div data-quill="true" data-id="inScope" data-copy=".in-scope-assets-example"></div>       
+                </div>
+                <br>
+                <label for="outScope" class="block text-sm font-medium text-gray-700">Out-of-Scope Assets</label>
+                <p class="mt-1 text-sm text-gray-600">Explicitly state what researchers should NOT test, such as:</p>
+                <ul class="mt-1 list-disc list-inside text-sm text-gray-600">
+                    <li>Third-party services and providers</li>
+                    <li>Physical locations and social engineering</li>
+                    <li>Non-production environments (unless specified)</li>
+                    <li>Legacy systems scheduled for retirement</li>
+                    <li>Recently acquired systems not fully integrated</li>
+                </ul>
+                <div class="flex items-start bg-red-50 border border-red-200 text-red-800 text-sm p-4 rounded mt-4">
+                    <svg class="h-5 w-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.72-1.36 3.485 0l6.518 11.59c.75 1.333-.213 2.998-1.742 2.998H3.48c-1.53 0-2.492-1.665-1.743-2.998l6.52-11.59zM11 14a1 1 0 10-2 0 1 1 0 002 0zm-1-2a1 1 0 01-1-1V8a1 1 0 112 0v3a1 1 0 01-1 1z" clip-rule="evenodd" />
+                    </svg>
+                    <p>
+                      <strong>Important:</strong> Being explicit about out-of-scope assets prevents unnecessary testing and potential disruptions to your services or third-party relationships.
+                    </p>
+                </div>                  
+                <p class="mt-4 text-sm text-gray-600 font-medium">Examples:</p>
+                <div class="out-of-scope-example bg-gray-50 border border-gray-200 p-4 rounded text-sm text-gray-600 space-y-2">
+                    <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                        <li>Any services hosted by third parties, unless they impact the security of our primary assets</li>
+                        <li>Marketing pages (e.g., blog, landing pages)</li>
+                        <li>Physical offices and social engineering</li>
+                        <li>Third-party plugins that we use but do not develop</li>
+                    </ul>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between items-center">
+                      <label class="block text-sm font-medium text-gray-700">Out-of-Scope Assets Text</label>
+                    </div>
+                    <!-- GENERIC toolbar and text area template, but with unique ID -->
+                    <div data-quill="true" data-id="outScope" data-copy=".out-of-scope-example"></div>       
+                </div>
+            </div>
+            <div>
+                <label for="vulnerabilities" class="block text-sm font-medium text-gray-700">Vulnerability Types</label>
+                <p class="mt-1 text-sm text-gray-600">Help researchers understand what types of vulnerabilities are valuable to your program and which ones aren't worth reporting.</p>
+                <br>
+                <p class="mt-1 text-sm font-medium text-gray-600">In-Scope Vulnerabilities</p>
+                <p class="mt-1 text-sm text-gray-600">List the types of vulnerabilities you're most interested in receiving:</p>
+                <ul class="mt-1 list-disc list-inside text-sm text-gray-600">
+                    <li>Prioritize based on your technology stack and business risks</li>
+                    <li>Consider including severity guidelines for each vulnerability type</li>
+                    <li>Focus on vulnerabilities that present actual security risks</li>
+                </ul>
+                <p class="mt-4 text-sm text-gray-600 font-medium">Examples:</p>
+                <div class="vulnerabilities-example bg-gray-50 border border-gray-200 p-4 rounded">
+                    <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                        <li>Cross-Site Scripting (XSS)</li>
+                        <li>SQL Injection</li>
+                        <li>Authentication bypass</li>
+                        <li>Privilege escalation</li>
+                        <li>Remote Code Execution (RCE)</li>
+                        <li>Security misconfigurations</li>
+                        <li>Server-side request forgery (SSRF)</li>
+                    </ul>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">In-Scope Vulnerabilities Text</label>
+                    <!-- GENERIC toolbar and text area template, but with unique ID -->
+                    <div data-quill="true" data-id="vulnerabilities" data-copy=".vulnerabilities-example"></div>
+                </div>
+            </div>
+            <div>
+                <label for="outOfScopeVulns" class="block text-sm font-medium text-gray-700">Out-of-Scope Vulnerabilities</label>
+                <p class="mt-1 text-sm text-gray-600">Specify vulnerabilities that you don't want reported:</p>
+                <ul class="mt-1 list-disc list-inside text-sm text-gray-600">
+                    <li>Low-impact issues that create noise in your program</li>
+                    <li>Known issues that you've accepted the risk for</li>
+                    <li>Theoretical vulnerabilities without practical exploit paths</li>
+                    <li>Issues that require unlikely user interaction</li>
+                </ul>
+                <p class="mt-4 text-sm text-gray-600 font-medium">Examples:</p>
+                <div class="out-of-scope-vulns-example bg-gray-50 border border-gray-200 p-4 rounded text-sm text-gray-600 space-y-2">
+                    <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+                        <li>Issues solely affecting outdated browsers</li>
+                        <li>Missing HTTP security headers (unless they lead to a proven vulnerability)</li>
+                        <li>Vulnerabilities requiring physical access</li>
+                        <li>Self-XSS requiring significant user interaction</li>
+                        <li>Reports from automated tools without clear evidence of impact</li>
+                        <li>Theoretical vulnerabilities without proof of exploitation</li>
+                    </ul>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Out-of-Scope Vulnerabilities Text</label>
+                    <!-- GENERIC toolbar and text area template, but with unique ID -->
+                    <div data-quill="true" data-id="outOfScopeVulns" data-copy=".out-of-scope-vulns-example"></div>
+                </div>
+            </div>
+            <div>
+                <label for="rewards" class="block text-sm font-medium text-gray-700">Reward Structure</label>
+                <div class="space-y-4">
+                    <p class="mt-1 text-sm text-gray-600">A clear reward structure helps researchers understand the value of different findings and incentivizes quality reports.</p>
+                    <p class="text-sm text-gray-600 font-medium">Setting Appropriate Rewards</p>
+                    <p class="mt-1 text-sm text-gray-600">Consider these factors when determining your reward structure:</p>
+                    <ul class="mt-1 list-disc list-inside text-sm text-gray-600">
+                        <li><strong>Program budget:</strong> Align rewards with your available budget</li>
+                        <li><strong>Asset criticality:</strong> Offer higher rewards for critical systems</li>
+                        <li><strong>Vulnerability impact:</strong> Base rewards on potential damage</li>
+                        <li><strong>Industry standards:</strong> Research what similar programs offer</li>
+                        <li><strong>Report quality:</strong> Reward detailed reports with clear reproduction steps</li>
+                    </ul>
+                    <p class="mt-4 text-sm text-gray-600 font-medium">Example Reward Structure</p>
+                    <div class="reward-example mt-4 bg-gray-50 border border-gray-200 p-4 rounded">
+                        <p class="mt-2 text-sm text-gray-600">We offer bounties based on the severity and impact of the vulnerability:</p>
+                        <p><strong>Critical: $300 - $500</strong><br>
+                        Examples: Remote Code Execution (RCE), database access, authentication bypass</p>
+                        <br>
+                        <p><strong>High: $150 - $300</strong><br>
+                        Examples: Privilege escalation, significant data exposure</p>
+                        <br>
+                        <p><strong>Medium: $50 - $150</strong><br>
+                        Examples: Cross-Site Scripting (XSS), CSRF, minor API issues</p>
+                        <br>
+                        <p><strong>Low: Thanks and recognition</strong><br>
+                        Examples: Information disclosure without direct impact</p>
+                        <br>
+                        <p class="mt-4 text-sm text-gray-600"><em>Note: Reports without clear security implications or that require unrealistic attack scenarios will not be rewarded.</em></p>
+                    </div>                      
+                    <p class="mt-4 text-sm text-gray-600 font-medium">Industry Norms & Testing Interest</p>
+                    <p class="mt-2 text-sm text-gray-600">The bounty amounts you offer directly impact the level of testing interest and researcher engagement your program will receive. Below is a guide to industry norms and what to expect at different reward tiers:</p>
+                    <div class="mb-4">
+                    <label for="rewardTierSelect" class="block text-sm font-medium text-gray-700">Choose Reward Tier:</label>
+                    <select id="rewardTierSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">-- Select Tier --</option>
+                        <option value="entry">Entry Level ($10–$500)</option>
+                        <option value="growing">Growing ($50–$2000)</option>
+                        <option value="established">Established ($200–$5000)</option>
+                        <option value="premium">Premium ($600–$15000)</option>
+                        <option value="elite">Elite ($2000–$15000+)</option>
+                    </select>
+                    </div>
+                    <div id="rewardDetails" class="mt-4 p-3 bg-blue-50 rounded-md hidden"></div>
+                    <button type="button" id="copyRewardBtn" class="mt-2 px-3 py-1 border border-indigo-600 text-indigo-600 rounded hover:bg-indigo-50 text-sm hidden">
+                        Copy to Reward Text
+                    </button>
+                </div>
+                <br>
+                <div class="mt-4">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-sm font-medium text-gray-700">Reward Text</label>
+                    </div>
+                    <!-- GENERIC toolbar and text area template, but with unique ID -->
+                    <div data-quill="true" data-id="rewards" data-copy=".reward-example"></div>
+                </div>
+                <div class="mt-4 p-3 bg-blue-50 rounded-md">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-sm text-gray-600">Consider additional rewards for exceptional reports, such as clear documentation, creative exploit chains, or suggestions for effective mitigations.</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="submissionGuidelinesInput" class="block text-sm font-medium text-gray-700">Submission Guidelines</label>
+                <p class="mt-1 text-sm text-gray-600">Clear submission guidelines help researchers provide the information you need to validate and fix vulnerabilities efficiently.</p>
+                <br>
+                <p class="mt-1 text-sm font-medium text-gray-600">What to Include</p>
+                <p class="mt-1 text-sm text-gray-600">Request that researchers include these elements in their reports:</p>
+                <ul class="mt-1 list-disc list-inside text-sm text-gray-600">
+                    <li><strong>Detailed reproduction steps:</strong> Clear, step-by-step instructions</li>
+                    <li><strong>Impact description:</strong> How the vulnerability could affect your system or users</li>
+                    <li><strong>Supporting evidence:</strong> Screenshots, videos, or code snippets</li>
+                    <li><strong>Suggested fix:</strong> Potential solutions (optional but appreciated)</li>
+                    <li><strong>Attack scenario:</strong> Real-world exploitation examples</li>
+                </ul>
+                <div class="mt-4">
+                    <h3 class="text-sm font-medium text-gray-600">Example Submission Guidelines</h3>
+                    <div class="submission-guidelines-example bg-gray-50 border border-gray-200 p-4 rounded-lg">
+                        <p class="mt-1 text-sm text-gray-600">When submitting a vulnerability report, please:</p>
+                        <ul class="mt-1 list-disc list-inside text-sm text-gray-600">
+                            <li>Provide clear, step-by-step instructions to reproduce the vulnerability</li>
+                            <li>Include screenshots, videos, or code snippets where possible</li>
+                            <li>Test only on your own accounts; do not access others' data</li>
+                            <li>Describe the potential impact and attack scenario</li>
+                            <li>Be respectful of our users' privacy and our systems' stability</li>
+                            <li>Do not use automated scanning tools without prior approval</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-sm font-medium text-gray-700">Submission Guidelines Text</label>
+                    </div>
+                    <!-- GENERIC toolbar and text area template, but with unique ID -->
+                    <div data-quill="true" data-id="submissionGuidelines" data-copy=".submission-guidelines-example"></div>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Our Commitment</label>
+                <p class="mt-1 text-sm text-gray-600">Commitment instructions TBA</p>
+            
+                <p class="mt-4 text-sm text-gray-600 font-medium">Example Commitment:</p>
+                <div class="commitment-example bg-gray-50 border border-gray-200 p-4 rounded text-sm text-gray-600">
+                    <ul class="list-disc pl-5 space-y-1">
+                      <li>We will acknowledge your report within [X] hours/days</li>
+                      <li>A resolution or update will be provided within [X] business days</li>
+                      <li>We will keep you informed about the status of your report</li>
+                      <li>We will recognize your contribution if you wish to be acknowledged</li>
+                    </ul>
+                </div>                  
+                <div class="mt-4">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-sm font-medium text-gray-700">Commitment Text</label>
+                    </div>
+                    <!-- GENERIC toolbar and text area template, but with unique ID -->
+                    <div data-quill="true" data-id="commitment" data-copy=".commitment-example"></div>
+                </div>
+            </div>            
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Safe Harbor</label>
+                <p class="mt-1 text-sm text-gray-600">A safe harbor provision helps protect good-faith security researchers who follow your program rules.</p>
+                <p class="mt-1 text-sm font-medium text-gray-600">Elements of an Effective Safe Harbor</p>
+                <p class="mt-1 text-sm text-gray-600">Your safe harbor provision should address:</p>
+                <ul class="mt-1 list-disc list-inside text-sm text-gray-600">
+                    <li><span class="font-medium">Legal protection:</span> Clear statement that authorized testing won't result in legal action</li>
+                    <li><span class="font-medium">Scope limitations:</span> Where and how researchers can test</li>
+                    <li><span class="font-medium">Good faith requirements:</span> Expectations for researcher behavior</li>
+                    <li><span class="font-medium">Prohibited activities:</span> Actions researchers must avoid</li>
+                    <li><span class="font-medium">Dispute resolution:</span> How to handle disagreements</li>
+                </ul>
+                <p class="mt-4 text-sm text-gray-600 font-medium">Example Safe Harbor Statement:</p>
+                <div class="safe-harbor-example bg-gray-50 border border-gray-200 p-4 rounded text-sm text-gray-600 space-y-2">
+                    <p><em>This program follows a 'safe harbor' approach. As long as your security research is conducted according to the guidelines below, we consider it authorized and will not initiate legal action against you or report you to law enforcement.</em></p>
+                    <ul class="list-disc list-inside pl-5">
+                      <li>Test only the systems and applications listed in our in-scope assets</li>
+                      <li>Do not intentionally access, modify, or destroy data belonging to other users</li>
+                      <li>Do not conduct denial of service attacks or degrade system performance</li>
+                      <li>Report vulnerabilities directly to us through our platform, not to third parties</li>
+                      <li>Give us reasonable time to address reported issues before public disclosure</li>
+                    </ul>
+                    <p><em>If legal questions arise despite your adherence to these guidelines, we'll work with you to understand and resolve them.</em></p>
+                </div>                  
+                <div class="mt-4">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-sm font-medium text-gray-700">Safe Harbor Text</label>
+                    </div>
+                    <!-- GENERIC toolbar and text area template, but with unique ID -->
+                    <div data-quill="true" data-id="safeHarbor" data-copy=".safe-harbor-example"></div>
+                </div>
+            </div>
+            </form>
+        </div>
+
+        <!-- Sticky Footer -->
+        <div class="bg-white shadow-lg sticky bottom-0 z-10 p-4 border-t border-gray-200">
+            <div class="max-w-4xl mx-auto">
+                <button type="submit" form="programForm" class="w-full bg-indigo-600 text-white py-3 px-6 rounded-md font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Generate Report
+                </button>
+            </div>
+        </div>
+
+        <style>
+            .toolbar {
+                display: flex;
+                gap: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+            .toolbar button {
+                padding: 0.25rem 0.4rem;
+                border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+                background: white;
+                cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.75rem; /* Reduce font size */
+            line-height: 1rem; 
+            }
+            .toolbar button:hover {
+                background: #f3f4f6;
+            }
+            .toolbar button.active {
+                background: #3b82f6;
+                color: white;
+        }
+
+        input[type="radio"] + label > span.font-medium {
+            color: rgb(37, 99, 235);
+            font-weight: 500;
+        }
+        input[type="radio"]:checked + label > span.font-medium {
+            color: rgb(37, 99, 235);
+            font-weight: 700;
+        }
+
+        [contenteditable] ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+        }
+        [contenteditable] ol {
+            list-style-type: decimal;
+            margin-left: 1.5rem;
+        }
+        .textAreaStyle {
+        font-size: 0.875rem; /* Tailwind's text-sm = 14px */
+        line-height: 1.25rem; /* Optional: matches text-sm */
+            font-family: inherit;
+        }
+        .quill-editor {
+            min-height: 150px;
+        }
+        .button-clean {
+            @apply px-3 py-1 text-sm rounded border font-medium text-black inline-flex items-center gap-1;
+        }
+        .button-blue {
+            @apply bg-blue-100 hover:bg-blue-200 border-blue-300;
+        }
+        .button-red {
+            @apply bg-red-100 hover:bg-red-200 border-red-300;
+        }
+        .ql-editor {
+            padding: 0.75rem;  /* Tailwind p-3 */
+            border-radius: 0.375rem;  /* Tailwind rounded-md */
+        }
+        
+        /* Remove gap between toolbar and editor */
+        .ql-toolbar {
+            margin-bottom: 0 !important;
+            border-bottom: none !important;
+        }
+        
+        .quill-editor {
+            border-top-left-radius: 0 !important;
+            border-top-right-radius: 0 !important;
+            min-height: 150px;
+        }
+        
+        /* Style for placeholder text */
+        .quill-editor.ql-placeholder::before {
+            color: #9CA3AF;
+            content: attr(data-placeholder);
+            position: absolute;
+            pointer-events: none;
+            padding: 10px;
+        }
+    </style>
+  <script>
+    const quillInstances = {}; // Holds all Quill editors
+    
+    // Company name functionality is disabled
+    /*
+    // Store the original example text for reference
+    const originalExampleText = document.querySelector('.program-description-example p').innerHTML;
+    
+    document.getElementById('companyName').addEventListener('input', function() {
+        const companyName = this.value || '[Company Name]';
+        const exampleContainer = document.querySelector('.program-description-example p');
+        if (exampleContainer) {
+            // Reset to original text and then replace the company name
+            exampleContainer.innerHTML = originalExampleText.replace(/\[Company Name\]/g, companyName);
+        }
+    });
+    */
+
+    function clearContent(id) {
+        if (quillInstances[id]) {
+            quillInstances[id].setText('');
+        } else {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = '';
+        }
+    }
+
+    function copyExampleContent(exampleSelector, targetId) {
+        const example = document.querySelector(exampleSelector);
+        const target = document.getElementById(targetId);
+        const quill = quillInstances[targetId];
+
+        if (!example || !target) return;
+
+        const html = example.innerHTML.trim();
+
+        if (quill) {
+            // Paste the entire block of HTML as-is — preserves formatting like italics and bold
+            quill.clipboard.dangerouslyPasteHTML(html, 'silent');
+        } else {
+            // Fallback if Quill not available
+            target.innerHTML = html;
+        }
+    }
+
+
+      document.getElementById('setAllTextToExamples').addEventListener('click', function() {
+        // Function to perform the actual setting of all examples
+        const setAllExamples = () => {
+          // Set company name (kept for data structure but not shown)
+          document.getElementById('companyName').value = 'Company Name';
+          // Note: Program Name is intentionally not set to preserve user input
+          
+          // Set all Quill editors with their respective examples
+          const editors = [
+            { id: 'description', example: '.program-description-example' },
+            { id: 'inScope', example: '.in-scope-assets-example' },
+            { id: 'outScope', example: '.out-of-scope-example' },
+            { id: 'vulnerabilities', example: '.vulnerabilities-example' },
+            { id: 'outOfScopeVulns', example: '.out-of-scope-vulns-example' },
+            { id: 'rewards', example: '.reward-example' },
+            { id: 'submissionGuidelines', example: '.submission-guidelines-example' },
+            { id: 'commitment', example: '.commitment-example' },
+            { id: 'safeHarbor', example: '.safe-harbor-example' }
+          ];
+
+          // Populate all editors with their respective examples
+          editors.forEach(editor => {
+            const quillId = `${editor.id}Editor`;
+
+            // Clear editor
+            if (quillInstances[quillId]) {
+                quillInstances[quillId].setContents([{ insert: '\n' }]);
+            }
+            // Copy content
+            copyExampleContent(editor.example, quillId);
+            });
+            
+            // Save after setting all examples
+            const data = {
+                programName: document.getElementById('programName').value || '', // Keep existing program name if any
+                companyName: document.getElementById('companyName').value,
+                rewardTier: document.getElementById('rewardTierSelect')?.value || '',
+                description: quillInstances['descriptionEditor']?.root.innerHTML || '',
+                inScope: quillInstances['inScopeEditor']?.root.innerHTML || '',
+                outScope: quillInstances['outScopeEditor']?.root.innerHTML || '',
+                vulnerabilities: quillInstances['vulnerabilitiesEditor']?.root.innerHTML || '',
+                outOfScopeVulns: quillInstances['outOfScopeVulnsEditor']?.root.innerHTML || '',
+                rewards: quillInstances['rewardsEditor']?.root.innerHTML || '',
+                submissionGuidelines: quillInstances['submissionGuidelinesEditor']?.root.innerHTML || '',
+                commitment: quillInstances['commitmentEditor']?.root.innerHTML || '',
+                safeHarbor: quillInstances['safeHarborEditor']?.root.innerHTML || ''
+            };
+            localStorage.setItem('programData', JSON.stringify(data));
+        };
+
+        // Check if there's any existing data
+        if (checkFormHasData()) {
+          // Show confirmation dialog
+          if (confirm('Are you sure you wish to set all to examples? This will override any text entered.')) {
+            setAllExamples();
+          }
+        } else {
+          // No existing data, proceed without confirmation
+          setAllExamples();
+        }
+    });
+
+    // Clear all form data
+    document.getElementById('clearAll').addEventListener('click', function() {
+        // Check if there's any data to clear
+        if (checkFormHasData()) {
+            // Show confirmation dialog
+            if (confirm('Are you sure you wish to clear all information? This will clear any text entered and clear any saved data.')) {
+                clearAllFormData();
+            }
+        } else {
+            // No text to clear but clear anyway because they may wish to clear saved data.
+            clearAllFormData();
+        }
+    });
+
+    function clearAllFormData() {
+        // Clear basic input fields
+        document.getElementById('programName').value = '';
+        document.getElementById('companyName').value = '';
+        
+        // Clear all Quill editors
+        const editorIds = [
+            'description',
+            'inScope',
+            'outScope',
+            'vulnerabilities',
+            'outOfScopeVulns',
+            'rewards',
+            'submissionGuidelines',
+            'commitment',
+            'safeHarbor'
+        ];
+
+        editorIds.forEach(id => {
+            const editorInstanceId = `${id}Editor`;
+            const editor = quillInstances[editorInstanceId];
+            if (editor) {
+                editor.setContents([{ insert: '\n' }]);
+                editor.setText('');
+                editor.formatText(0, editor.getLength(), {
+                    bold: false,
+                    italic: false,
+                    underline: false
+                });
+            }
+
+            // Also clear the hidden input field
+            const hiddenField = document.getElementById(id);
+            if (hiddenField) {
+                hiddenField.value = '';
+            }
+        });
+
+        // Clear any saved data in localStorage
+        if (typeof(Storage) !== 'undefined') {
+            localStorage.removeItem('programData');
+        }
+    }
+
+    function checkFormHasData() {
+        // Check basic input fields
+        const companyName = document.getElementById('companyName').value.trim();
+        const programName = document.getElementById('programName').value.trim();
+        
+        // Check Quill editors
+        const editorIds = [
+            'description',
+            'inScope',
+            'outScope',
+            'vulnerabilities',
+            'outOfScopeVulns',
+            'rewards',
+            'submissionGuidelines',
+            'commitment',
+            'safeHarbor'
+        ];
+
+        // Check if any basic fields have data
+        if (companyName || programName) {
+            return true;
+        }
+
+        // Check if any Quill editor has content
+        const hasEditorContent = editorIds.some(id => {
+            if (quillInstances[id]) {
+                const content = quillInstances[id].getText().trim();
+                return content.length > 0;
+            }
+            return false;
+        });
+
+        return hasEditorContent;
+    }
+    
+    const rewardsTextarea = document.getElementById('rewards');
+    
+    function copyRewardTier() {
+        const rewardBreakdown = document.getElementById('rewardBreakdown');
+        if (rewardBreakdown && quillInstances['rewardsEditor']) {
+            const combinedHTML = `
+                <p>${rewardIntro}</p>
+                ${rewardBreakdown.innerHTML}
+                <p class="mt-4 text-sm text-gray-600">${rewardOutro}</p>
+            `;
+            quillInstances['rewardsEditor'].clipboard.dangerouslyPasteHTML(combinedHTML, 'silent');
+        }
+    }
+
+    function initialiseQuill(editorId, toolbarId, placeholderText = 'Type text here or press Copy From Example and modify...') {
+        const quill = new Quill(`#${editorId}`, {
+            theme: 'snow',
+            placeholder: placeholderText,
+            modules: {
+                toolbar: `#${toolbarId}`,
+                clipboard: {
+                    matchVisual: false
+                }
+            },
+            formats: ['bold', 'italic', 'underline', 'list', 'bullet', 'indent', 'link']
+        });
+
+        // Set initial placeholder text if editor is empty
+        if (quill.getLength() <= 1) {
+            quill.root.setAttribute('data-placeholder', placeholderText);
+            quill.root.classList.add('ql-placeholder');
+        }
+
+        quill.on('text-change', function() {
+            const fieldId = editorId.replace('Editor', '');
+            const hiddenInput = document.getElementById(fieldId);
+            if (hiddenInput) {
+                hiddenInput.value = quill.root.innerHTML;
+                
+                // Save to localStorage
+                const currentData = JSON.parse(localStorage.getItem('programData') || '{}');
+                currentData[fieldId] = quill.root.innerHTML;
+                localStorage.setItem('programData', JSON.stringify(currentData));
+            }
+            
+            // Toggle placeholder class based on content
+            if (quill.getLength() <= 1) {
+                quill.root.classList.add('ql-placeholder');
+            } else {
+                quill.root.classList.remove('ql-placeholder');
+            }
+        });
+
+        // Handle paste to preserve formatting
+        quill.clipboard.addMatcher(Node.TEXT_NODE, (node, delta) => {
+            if (quill.getLength() <= 1) {
+                quill.root.classList.remove('ql-placeholder');
+            }
+            return delta;
+        });
+
+        quillInstances[editorId] = quill;
+        return quill;
+    }
+
+    document.querySelectorAll('[data-quill="true"]').forEach(el => {
+        const id = el.getAttribute('data-id');
+        const copySelector = el.getAttribute('data-copy');
+        const toolbarId = `toolbar-${id}`;
+        const editorId = `${id}Editor`;
+
+        el.innerHTML = `
+            <div id="${toolbarId}" class="quill-toolbar flex flex-wrap items-center gap-1 text-sm mb-2">
+            <button class="ql-bold" title="Bold"></button>
+            <button class="ql-italic" title="Italic"></button>
+            <button class="ql-underline" title="Underline"></button>
+            <button class="ql-list" value="bullet" title="Bullet List"></button>
+            <button class="ql-list" value="ordered" title="Numbered List"></button>
+            ${copySelector ? `<button type="button" onclick="copyExampleContent('${copySelector}', '${editorId}')" class="button-clean button-blue min-w-[10rem] whitespace-nowrap">⬇️ Copy From Example</button>` : ''}
+            <button type="button" onclick="clearContent('${editorId}')" class="button-clean button-red flex items-center gap-1 px-2 py-1 whitespace-nowrap">❌ <span>Clear</span></button>
+            </div>
+            <div id="${editorId}" class="quill-editor bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></div>
+            <input type="hidden" id="${id}" name="${id}" required>
+        `;
+
+        initialiseQuill(editorId, toolbarId, 'Type text here or press Copy From Example and modify...');
+    });
+
+    const savedData = JSON.parse(localStorage.getItem('programData') || '{}');
+
+    // Restore reward tier selection (if previously saved)
+    if (savedData.rewardTier) {
+      const rewardTierSelect = document.getElementById('rewardTierSelect');
+      rewardTierSelect.value = savedData.rewardTier;
+      rewardTierSelect.dispatchEvent(new Event('change'));
+    }
+    
+    document.getElementById('programForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Save Quill content
+    document.getElementById('description').value = quillInstances['descriptionEditor'].root.innerHTML;
+    document.getElementById('inScope').value = quillInstances['inScopeEditor'].root.innerHTML;
+    document.getElementById('outScope').value = quillInstances['outScopeEditor'].root.innerHTML;
+    document.getElementById('vulnerabilities').value = quillInstances['vulnerabilitiesEditor'].root.innerHTML;
+    document.getElementById('outOfScopeVulns').value = quillInstances['outOfScopeVulnsEditor'].root.innerHTML;
+    document.getElementById('rewards').value = quillInstances['rewardsEditor'].root.innerHTML;
+    document.getElementById('submissionGuidelines').value = quillInstances['submissionGuidelinesEditor'].root.innerHTML;
+    document.getElementById('commitment').value = quillInstances['commitmentEditor'].root.innerHTML;
+    document.getElementById('safeHarbor').value = quillInstances['safeHarborEditor'].root.innerHTML;
+    
+    const data = {
+        programName: document.getElementById('programName').value,
+        companyName: document.getElementById('companyName').value,
+        description: document.getElementById('description').value,
+        inScope: document.getElementById('inScope').value,
+        outScope: document.getElementById('outScope').value,
+        vulnerabilities: document.getElementById('vulnerabilities').value,
+        outOfScopeVulns: document.getElementById('outOfScopeVulns').value,
+        rewards: document.getElementById('rewards').value,
+        rewardTier: document.getElementById('rewardTierSelect').value,
+        submissionGuidelines: document.getElementById('submissionGuidelines').value,
+        commitment: document.getElementById('commitment').value,
+        safeHarbor: document.getElementById('safeHarbor').value
+      };
+      localStorage.setItem('programData', JSON.stringify(data));
+      window.location.href = 'bugbop_program_form.html';
+    });
+
+    // Shared intro and outro constants
+    const rewardIntro = "We offer bounties based on the severity and impact of the vulnerability:";
+    const rewardOutro = "<em>Note: Reports without clear security implications or that require unrealistic attack scenarios will not be rewarded.</em>";
+
+    // Shared examples
+    const rewardCriticalExample = "Examples: Remote Code Execution (RCE), database access, authentication bypass";
+    const rewardHighExample = "Examples: Privilege escalation, significant data exposure";
+    const rewardMediumExample = "Examples: Cross-Site Scripting (XSS), CSRF, minor API issues";
+    const rewardLowExample = "Examples: Information disclosure without direct impact";
+
+    // Full reward copy text by tier (for pasting into the Reward Text field)
+    const rewardCopyText = {
+    entry: `<p><strong>Critical: $100–$500</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardCriticalExample}</span></p>
+            <br>
+            <p><strong>High: $60–$350</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardHighExample}</span></p>
+            <br>
+            <p><strong>Medium: $30–$200</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardMediumExample}</span></p>
+            <br>
+            <p><strong>Low: Thanks or $10–$50</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardLowExample}</span></p>`,
+    
+    growing: `<p><strong>Critical: $500–$2,000</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardCriticalExample}</span></p>
+            <br>
+            <p><strong>High: $350–$1,400</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardHighExample}</span></p>
+            <br>
+            <p><strong>Medium: $200–$800</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardMediumExample}</span></p>
+            <br>
+            <p><strong>Low: $50–$200</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardLowExample}</span></p>`,
+    
+    established: `<p><strong>Critical: $2,000–$5,000</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardCriticalExample}</span></p>
+            <br>
+            <p><strong>High: $1,400–$3,500</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardHighExample}</span></p>
+            <br>
+            <p><strong>Medium: $800–$2,000</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardMediumExample}</span></p>
+            <br>
+            <p><strong>Low: $200–$600</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardLowExample}</span></p>`,
+    
+    premium: `<p><strong>Critical: $5,000–$15,000</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardCriticalExample}</span></p>
+            <br>
+            <p><strong>High: $3,500–$10,000</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardHighExample}</span></p>
+            <br>
+            <p><strong>Medium: $2,000–$6,000</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardMediumExample}</span></p>
+            <br>
+            <p><strong>Low: $600–$2,000</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardLowExample}</span></p>`,
+    
+    elite: `<p><strong>Critical: $15,000+</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardCriticalExample}</span></p>
+            <br>
+            <p><strong>High: $10,000+</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardHighExample}</span></p>
+            <br>
+            <p><strong>Medium: $6,000+</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardMediumExample}</span></p>
+            <br>
+            <p><strong>Low: $2,000+</strong><br><span class="ml-4 block text-sm text-gray-600">${rewardLowExample}</span></p>`
+    };
+
+    const rewardDescriptions = {
+    entry: {
+        title: "Entry Level Programs",
+        description: "Low to moderate testing interest, primarily from beginners and hobbyists. Best for small startups and initial programs.",
+        breakdown: rewardCopyText.entry
+    },
+    growing: {
+        title: "Growing Programs",
+        description: "Moderate testing interest. Suitable for startups and growing companies with more mature security postures.",
+        breakdown: rewardCopyText.growing
+    },
+    established: {
+        title: "Established Programs",
+        description: "High testing interest from a wide pool of researchers. Suitable for companies with established security teams.",
+        breakdown: rewardCopyText.established
+    },
+    premium: {
+        title: "Premium Programs",
+        description: "Very high testing interest. Suitable for tech-forward organisations that treat bug bounty as a key part of security.",
+        breakdown: rewardCopyText.premium
+    },
+    elite: {
+        title: "Elite Programs",
+        description: "Very high testing interest from elite researchers and specialized security teams. Suitable for critical infrastructure and major tech companies.",
+        breakdown: rewardCopyText.elite
+    }
+    };
+
+    document.getElementById('rewardTierSelect').addEventListener('change', function () {
+    const selected = this.value;
+    const detailsBox = document.getElementById('rewardDetails');
+    const copyButton = document.getElementById('copyRewardBtn');
+
+    if (rewardDescriptions[selected]) {
+        const tier = rewardDescriptions[selected];
+        detailsBox.innerHTML = `
+        <p class="mt-1">We offer bounties based on the severity and impact of the vulnerability:</p>
+        <div class="mt-2" id="rewardBreakdown">${tier.breakdown}</div>
+        <br>
+        <p class="mt-4 text-sm text-gray-600"><em>Note: These ranges reflect industry averages across all severity levels. Actual bounties should be tailored to your organization's specific security needs, risk profile, and budget.</em></p>
+        `;
+        detailsBox.classList.remove('hidden');
+        copyButton.classList.remove('hidden');
+    } else {
+        detailsBox.classList.add('hidden');
+        detailsBox.innerHTML = '';
+        copyButton.classList.add('hidden');
+    }
+    });
+
+    document.getElementById('copyRewardBtn').addEventListener('click', function () {
+    const selected = document.getElementById('rewardTierSelect').value;
+    if (rewardCopyText[selected]) {
+        const combinedHTML = `
+        <p>${rewardIntro}</p>
+        ${rewardCopyText[selected]}
+        <p class="mt-4 text-sm text-gray-600">${rewardOutro}</p>
+        `;
+        quillInstances['rewardsEditor'].clipboard.dangerouslyPasteHTML(combinedHTML, 'silent');
+    }
+    });
+
+    // Auto-save companyName and programName on input
+    ['companyName', 'programName'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', () => {
+                const currentData = JSON.parse(localStorage.getItem('programData') || '{}');
+                currentData[id] = input.value;
+                localStorage.setItem('programData', JSON.stringify(currentData));
+            });
+        }
+    });
+
+    // Auto-save reward tier on change
+    const rewardTierSelect = document.getElementById('rewardTierSelect');
+    if (rewardTierSelect) {
+        rewardTierSelect.addEventListener('change', () => {
+            const currentData = JSON.parse(localStorage.getItem('programData') || '{}');
+            currentData.rewardTier = rewardTierSelect.value;
+            localStorage.setItem('programData', JSON.stringify(currentData));
+        });
+    }
+
+    // Function to force scroll to top and prevent auto-scrolling
+    function forceScrollToTop() {
+        // Try to focus on the top anchor
+        const anchor = document.getElementById('top-anchor');
+        if (anchor) {
+            anchor.scrollIntoView({ behavior: 'auto', block: 'start' });
+        }
+        
+        // Force scroll to top using multiple methods
+        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        
+        // Blur any focused elements that might cause scrolling
+        if (document.activeElement) {
+            document.activeElement.blur();
+        }
+        
+        // Add a small delay and check again
+        setTimeout(() => {
+            if (anchor) anchor.scrollIntoView({ behavior: 'auto', block: 'start' });
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+        }, 10);
+    }
+
+    
+    // Function to load all saved data at once while preventing scroll jumps
+    function loadSavedData() {
+        const savedData = JSON.parse(localStorage.getItem('programData') || '{}');
+        if (Object.keys(savedData).length === 0) {
+            document.documentElement.classList.remove('prevent-scroll');
+            return;
+        }
+
+        // Store current scroll position
+        const scrollY = window.scrollY;
+        
+        // Load all fields at once
+        Object.entries(savedData).forEach(([field, value]) => {
+            const editor = quillInstances[`${field}Editor`];
+            
+            if (editor && value) {
+                // For Quill editors, use the silent flag to prevent scrolling
+                editor.clipboard.dangerouslyPasteHTML(value, 'silent');
+            } else if (document.getElementById(field)) {
+                // For regular inputs, set the value directly
+                document.getElementById(field).value = value || '';
+            }
+        });
+        
+        // Force scroll to top and remove scroll prevention
+        forceScrollToTop();
+        document.documentElement.classList.remove('prevent-scroll');
+    }
+    
+    // Add CSS to prevent scrolling when the prevent-scroll class is active
+    const style = document.createElement('style');
+    style.id = 'prevent-scroll-style';
+    style.textContent = `
+        .prevent-scroll {
+            overflow: hidden !important;
+            position: static !important;
+            height: 100vh !important;
+        }
+        
+        /* Ensure form is still visible and scrollable within the container */
+        .prevent-scroll #programForm {
+            max-height: 100vh !important;
+            overflow-y: auto !important;
+        }
+        
+        /* Ensure all content is visible when not preventing scroll */
+        html:not(.prevent-scroll) {
+            overflow: auto !important;
+            position: static !important;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Initial scroll to top
+    forceScrollToTop();
+    
+    // Add a class to prevent scrolling during load
+    document.documentElement.classList.add('prevent-scroll');
+    
+    // After all content is loaded and Quill is initialized
+    window.addEventListener('load', function() {
+        // Initial scroll to top
+        forceScrollToTop();
+        
+        // Force scroll to top after a short delay to ensure Quill is done initializing
+        setTimeout(() => {
+            forceScrollToTop();
+            
+            // Load saved data
+            loadSavedData();
+            
+            // Multiple scroll attempts to ensure we stay at top
+            setTimeout(forceScrollToTop, 50);
+            setTimeout(forceScrollToTop, 100);
+            setTimeout(forceScrollToTop, 200);
+            setTimeout(forceScrollToTop, 300);
+            
+            // One final check after everything settles
+            setTimeout(() => {
+                document.documentElement.classList.remove('prevent-scroll');
+                forceScrollToTop();
+            }, 500);
+        }, 300);
+    });
+    
+    // Initial scroll to top as soon as possible
+    forceScrollToTop();
+
+  </script>
+</body>
+</html>

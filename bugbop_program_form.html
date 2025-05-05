@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- Top Section: Fixed Header -->
+    <div class="bg-white shadow p-4 flex items-center justify-center sticky top-0 z-10">
+        <button onclick="history.back()" 
+            class="absolute left-4 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            title="Go back to edit the program description">
+            ← Back to Edit
+        </button>
+        <h1 class="text-xl font-bold text-gray-800">Program Summary</h1>
+    </div>
+
+    <!-- Scrollable Content Area -->
+    <main class="flex-1 overflow-y-auto p-6 mb-24"> <!-- Add bottom padding for fixed buttons -->
+        <div id="programDetails" class="space-y-4 text-sm text-gray-800 max-w-4xl mx-auto bg-white p-6 rounded shadow"></div>
+    </main>
+
+    <!-- Bottom Buttons: Fixed to Bottom -->
+    <div class="fixed bottom-0 left-0 w-full bg-white shadow p-4 flex justify-center gap-4 z-10">
+        <!-- Hide Download and Save as PDF buttons -->
+        <button type="button" onclick="downloadText()" class="hidden px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white">Download</button>
+        <button type="button" onclick="copyText()" class="px-6 py-3 rounded-md bg-green-600 hover:bg-green-700 text-white font-medium text-lg w-52">Copy</button>
+        <button type="button" onclick="saveAsPDF()" class="hidden px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white">Save to PDF</button>
+    </div>
+
+</body>
+
+
+    <script>
+        // Get form data from localStorage
+        const formData = JSON.parse(localStorage.getItem('programData') || '{}');
+        
+        // Get all form data
+        const programName = formData.programName || '';
+        const companyName = formData.companyName || '';
+        const description = formData.description || '';
+        const inScope = formData.inScope || '';
+        const outScope = formData.outScope || '';
+        const vulnerabilities = formData.vulnerabilities || '';
+        const outOfScopeVulns = formData.outOfScopeVulns || '';
+        const rewards = formData.rewards || '';
+        const rewardStructure = formData.rewardStructure || '';
+        const submissionGuidelines = formData.submissionGuidelines || '';
+        const commitment = formData.commitment || '';
+        const safeHarbor = formData.safeHarbor || '';
+
+        // Debug: Log the form data to console
+        console.log('Form data:', formData);
+
+        // Create the HTML content for the program details
+        const programContent = `
+            <div>
+                <h2 class="text-2xl font-bold">${programName} Bug Bounty Program</h2>
+                <br><br>
+                <h3 class="font-bold">Welcome</h3>
+                <div class="prose max-w-none">${description}</div>
+                <br><br>
+                <h3 class="font-bold">Program Scope</h3>
+                <p>We appreciate reports that can help us improve our security posture. Please review the following details carefully before submitting your findings.</p>
+                <br><br>
+                <h3 class="font-bold">In-Scope Assets</h3>
+                <div class="prose max-w-none">${inScope}</div>
+                <br><br>
+                <h3 class="font-bold">Out-of-Scope Assets</h3>
+                <div class="prose max-w-none">${outScope}</div>
+                <br><br>
+                <h3 class="font-bold">Vulnerabilities We're Interested In</h3>
+                <div class="prose max-w-none">${vulnerabilities}</div>
+                <br><br>
+                <h3 class="font-bold">Vulnerabilities Out-of-Scope</h3>
+                <div class="prose max-w-none">${outOfScopeVulns}</div>
+                <br><br>
+                <h3 class="font-bold">Rewards</h3>
+                <div class="prose max-w-none">
+                    ${rewards}
+                </div>
+                <br><br>
+                <h3 class="font-bold">Submission Guidelines</h3>
+                <div class="prose max-w-none">
+                    ${submissionGuidelines}
+                </div>
+                <br><br>
+                <h3 class="font-bold">Our Commitment</h3>
+                <div class="prose max-w-none">
+                    ${commitment}
+                </div>
+                <br><br>
+                <h3 class="font-bold">Legal Safe Harbor</h3>
+                <div class="prose max-w-none">${safeHarbor}</div>
+            </div>
+        `;
+
+        // Set the content in the programDetails div
+        const programDetails = document.getElementById('programDetails');
+        if (programDetails) {
+            programDetails.innerHTML = programContent;
+        } else {
+            console.error('Could not find programDetails element');
+        }
+
+        // Store the plain text version
+        function downloadText() {
+            const plainText = `${programName} Bug Bounty Program
+
+Company Name ${companyName}
+
+Program Description
+${description}
+
+Program Scope
+We appreciate reports that can help us improve our security posture. Please review the following details carefully before submitting your findings.
+
+In-Scope Assets
+${inScope}
+
+Out-of-Scope Assets
+${outScope}
+
+In-Scope Vulnerabilities
+${vulnerabilities}
+
+Out-of-Scope Vulnerabilities
+${outOfScopeVulns}
+
+Rewards
+${rewards}
+
+Submission Guidelines
+${submissionGuidelines.replace(/<br>/g, '\n')}
+
+Our Commitment
+${commitment.replace(/<br>/g, '\n')}
+
+Legal Safe Harbor
+${safeHarbor}`;
+            
+            const blob = new Blob([plainText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${programName.replace(/[^a-zA-Z0-9]/g, '_')}_program.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('Text file downloaded successfully!');
+        }
+
+        // Copy text to clipboard
+        function copyText() {
+            // Get the HTML content from the div
+            const htmlContent = document.getElementById('programDetails').innerHTML;
+            
+            // Get the text content directly from the displayed content
+            const plainText = document.getElementById('programDetails').textContent;
+            
+            // Create a ClipboardItem with both HTML and plain text
+            navigator.clipboard.write([
+                new ClipboardItem({
+                    'text/html': new Blob([htmlContent], { type: 'text/html' }),
+                    'text/plain': new Blob([plainText], { type: 'text/plain' })
+                })
+            ])
+            .then(() => {
+                alert('Text copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy text. Please try again.');
+            });
+        }
+
+        // Save as PDF
+        function saveAsPDF() {
+            const element = document.createElement('div');
+            element.innerHTML = `
+                <style>
+                    @page {
+                        margin: 20mm;
+                    }
+                    body {
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                        padding: 20px;
+                        max-width: 800px;
+                        margin: 0 auto;
+                        background: white;
+                        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                    }
+                    h1 {
+                        font-size: 24px;
+                        margin-bottom: 20px;
+                        text-align: center;
+                    }
+                    h3 {
+                        font-size: 18px;
+                        margin-bottom: 10px;
+                        color: #333;
+                    }
+                    p {
+                        margin-bottom: 15px;
+                        color: #666;
+                    }
+                    .content {
+                        padding: 20px;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        background: white;
+                    }
+                </style>
+                <style>
+                    .toolbar {
+                        display: flex;
+                        gap: 0.5rem;
+                        margin-bottom: 0.5rem;
+                    }
+                    .toolbar button {
+                        padding: 0.25rem 0.5rem;
+                        border: 1px solid #e5e7eb;
+                        border-radius: 0.375rem;
+                        background: white;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                    }
+                    .toolbar button:hover {
+                        background: #f3f4f6;
+                    }
+                    .toolbar button.active {
+                        background: #3b82f6;
+                        color: white;
+                    }
+
+                    [contenteditable] ul {
+                        list-style-type: disc;
+                        margin-left: 1.5rem;
+                    }
+                    [contenteditable] ol {
+                        list-style-type: decimal;
+                        margin-left: 1.5rem;
+                    }
+                </style>
+                <div class="content">
+                    <h1>${programName} Bug Bounty Program</h1>
+                    ${document.getElementById('programDetails').innerHTML}
+                </div>
+            `;
+
+            html2pdf().from(element).save(`${programName.replace(/[^a-zA-Z0-9]/g, '_')}_bug_bounty_program.pdf`)
+                .then(() => {
+                    alert('PDF saved successfully!');
+                })
+                .catch(err => {
+                    console.error('Failed to generate PDF: ', err);
+                    alert('Failed to generate PDF. Please try again.');
+                });
+        }
+    </script>
+    <style>
+        .toolbar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .toolbar button {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .toolbar button:hover {
+            background: #f3f4f6;
+        }
+        .toolbar button.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .content ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+        }
+        .content ol {
+            list-style-type: decimal;
+            margin-left: 1.5rem;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem; /* or use Tailwind: pl-6 */
+            list-style-type: disc; /* for ul */
+        }
+        ol {
+            list-style-type: decimal; /* for ol */
+        }
+    </style>
+</body>
+</html>
